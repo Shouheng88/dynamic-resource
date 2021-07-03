@@ -1,4 +1,4 @@
-package me.shouheng.dynamic
+package me.shouheng.dynamicsample
 
 import android.app.Application
 import me.shouheng.vmlib.VMLib

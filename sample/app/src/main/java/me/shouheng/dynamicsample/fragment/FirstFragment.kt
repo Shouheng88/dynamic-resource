@@ -1,14 +1,9 @@
-package me.shouheng.dynamic.fragment
+package me.shouheng.dynamicsample.fragment
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
 import androidx.navigation.fragment.findNavController
-import me.shouheng.dynamic.R
-import me.shouheng.dynamic.databinding.FragmentFirstBinding
+import me.shouheng.dynamicsample.R
+import me.shouheng.dynamicsample.databinding.FragmentFirstBinding
 import me.shouheng.utils.ktx.onDebouncedClick
 import me.shouheng.vmlib.base.ViewBindingFragment
 import me.shouheng.vmlib.comn.EmptyViewModel

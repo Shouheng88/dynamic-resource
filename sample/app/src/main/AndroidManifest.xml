@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="me.shouheng.dynamic">
+    package="me.shouheng.dynamicsample">
 
     <application
-        android:name=".App"
+        android:name="me.shouheng.dynamicsample.App"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -15,7 +15,7 @@
         tools:overrideLibrary="me.shouheng.uix"
         tools:replace="android:allowBackup">
         <activity
-            android:name=".activity.MainActivity"
+            android:name="me.shouheng.dynamicsample.activity.MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>

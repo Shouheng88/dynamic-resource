@@ -1,13 +1,9 @@
-package me.shouheng.dynamic.activity
+package me.shouheng.dynamicsample.activity
 
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatActivity
-import me.shouheng.dynamic.R
-import me.shouheng.dynamic.databinding.ActivityMainBinding
+import me.shouheng.dynamicsample.databinding.ActivityMainBinding
 import me.shouheng.utils.ktx.onDebouncedClick
-import me.shouheng.vmlib.base.CommonActivity
 import me.shouheng.vmlib.base.ViewBindingActivity
 import me.shouheng.vmlib.comn.EmptyViewModel
 
