@@ -1,0 +1,3 @@
+include ':app', ':library', ':resource'
+project(':library').projectDir = new File('../library')
+project(':resource').projectDir = new File('../resource')
