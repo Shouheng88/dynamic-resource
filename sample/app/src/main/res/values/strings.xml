@@ -4,6 +4,9 @@
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
+    <string name="fab_click_action">Action</string>
+    <string name="fab_click_message">Replace with your own action</string>
+
     <string name="hello_first_fragment">Hello from first fragment.</string>
     <string name="hello_second_fragment">Hello from second fragment.</string>
 </resources>

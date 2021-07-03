@@ -7,6 +7,7 @@ import me.shouheng.dynamicsample.databinding.ActivityMainBinding
 import me.shouheng.dynamicsample.fragment.FirstFragment
 import me.shouheng.dynamicsample.fragment.SecondFragment
 import me.shouheng.utils.ktx.onDebouncedClick
+import me.shouheng.utils.ktx.stringOf
 import me.shouheng.vmlib.base.ViewBindingActivity
 import me.shouheng.vmlib.comn.EmptyViewModel
 
@@ -18,8 +19,8 @@ class MainActivity : ViewBindingActivity<EmptyViewModel, ActivityMainBinding>(),
     override fun doCreateView(savedInstanceState: Bundle?) {
         setSupportActionBar(binding.toolbar)
         binding.fab.onDebouncedClick {
-            Snackbar.make(it, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
+            Snackbar.make(it, getString(R.string.fab_click_message), Snackbar.LENGTH_LONG)
+                .setAction(stringOf(R.string.fab_click_action), null).show()
         }
         changeToFirstFragment()
     }
