@@ -1,6 +1,8 @@
 package me.shouheng.dynamicsample.fragment
 
 import android.os.Bundle
+import me.shouheng.dynamic.loader.Source
+import me.shouheng.dynamicsample.App
 import me.shouheng.dynamicsample.activity.FragmentChangeInteraction
 import me.shouheng.dynamicsample.databinding.FragmentFirstBinding
 import me.shouheng.utils.ktx.onDebouncedClick
@@ -12,6 +14,9 @@ class FirstFragment : ViewBindingFragment<EmptyViewModel, FragmentFirstBinding>(
     override fun doCreateView(savedInstanceState: Bundle?) {
         binding.buttonFirst.onDebouncedClick {
             (activity as? FragmentChangeInteraction)?.changeToSecondFragment()
+        }
+        binding.btnLoadAnother.onDebouncedClick {
+            App.app.dynamic.load("another", Source.RESOURCES, null)
         }
     }
 }

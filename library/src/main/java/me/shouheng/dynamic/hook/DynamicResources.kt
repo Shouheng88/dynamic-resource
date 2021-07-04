@@ -5,24 +5,52 @@ import android.graphics.Movie
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.util.TypedValue
+import me.shouheng.dynamic.Dynamic
+import me.shouheng.dynamic.loader.Source
+import me.shouheng.dynamic.loader.SourceType
+import me.shouheng.dynamic.resources.DynamicResourcesChangeAware
 import me.shouheng.dynamic.resources.IResources
-import me.shouheng.utils.stability.L
 import java.io.InputStream
 
 /** Dynamic resources */
-internal class DynamicResources(
-    private val realResources: IResources?,
-    resources: Resources
-) : Resources(resources.assets, resources.displayMetrics, resources.configuration) {
+class DynamicResources(
+    private var resources: IResources?,
+    appResources: Resources,
+    dynamic: Dynamic
+) : Resources(
+    appResources.assets,
+    appResources.displayMetrics,
+    appResources.configuration
+), DynamicResourcesChangeAware {
+
+    init {
+        dynamic.registerDynamicResourcesChangeAware(this)
+    }
 
     override fun getString(id: Int): String {
-        val result = super.getString(id)
-        L.d("Trying get string: $result")
+        var result = super.getString(id)
+        if (resources == null) return result
+        try {
+            val entryName = getResourceEntryName(id)
+            val resId = resources!!.getIdentifier(entryName, "string")
+            result = resources!!.getString(resId)
+        } catch (e: NotFoundException) {
+            e.printStackTrace()
+        }
         return result
     }
 
     override fun getString(id: Int, vararg formatArgs: Any?): String {
-        return super.getString(id, *formatArgs)
+        var result = super.getString(id, formatArgs)
+        if (resources == null) return result
+        try {
+            val entryName = getResourceEntryName(id)
+            val resId = resources!!.getIdentifier(entryName, "string")
+            result = resources!!.getString(resId, formatArgs)
+        } catch (e: NotFoundException) {
+            e.printStackTrace()
+        }
+        return result
     }
 
     override fun getTextArray(id: Int): Array<CharSequence> {
@@ -143,5 +171,13 @@ internal class DynamicResources(
 
     override fun getXml(id: Int): XmlResourceParser {
         return super.getXml(id)
+    }
+
+    override fun onResourcesChanged(resources: IResources, sourceType: SourceType) {
+        if (sourceType != Source.DEFAULT) {
+            this.resources = resources
+        } else {
+            this.resources = null
+        }
     }
 }

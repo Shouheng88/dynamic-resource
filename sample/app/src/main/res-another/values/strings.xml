@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name_another">[Another] Dynamic Resources</string>
+    <string name="title_activity_main_another">[Another] MainActivity</string>
+    <string name="next_another">[Another] Next</string>
+    <string name="previous_another">[Another] Previous</string>
+
+    <string name="fab_click_action_another">[Another] Action</string>
+    <string name="fab_click_message_another">[Another] Replace with your own action</string>
+
+    <string name="hello_first_fragment_another">[Another] Hello from first fragment.</string>
+    <string name="hello_second_fragment_another">[Another] Hello from second fragment.</string>
+</resources>

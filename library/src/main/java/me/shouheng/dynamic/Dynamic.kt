@@ -1,11 +1,15 @@
 package me.shouheng.dynamic
 
 import android.app.Application
+import me.shouheng.dynamic.Dynamic.Companion.dynamic
 import me.shouheng.dynamic.hook.DynamicActivityLifecycleCallbacks
+import me.shouheng.dynamic.hook.DynamicContext
 import me.shouheng.dynamic.hook.DynamicContextHooker
 import me.shouheng.dynamic.loader.*
+import me.shouheng.dynamic.resources.DynamicResourcesChangeAware
 import me.shouheng.dynamic.resources.IResources
 import me.shouheng.utils.UtilsApp
+import java.util.concurrent.CopyOnWriteArrayList
 
 @DslMarker
 annotation class DynamicResourcesDSL
@@ -19,15 +23,14 @@ annotation class DynamicResourcesDSL
 class Dynamic private constructor() {
 
     private lateinit var application: Application
+    private var dynamicActivityLifecycleCallbacks: DynamicActivityLifecycleCallbacks? = null
+    private var appDynamicContext: DynamicContext? = null
 
     private val loaders = mutableMapOf<SourceType, ResourcesLoader>()
 
-    private val defaultLoaders by lazy {
-        listOf(
-            ExternalResourcesLoader(application),
-            AssetsResourcesLoader()
-        )
-    }
+    private val dynamicResourcesChangeAwareList = CopyOnWriteArrayList<DynamicResourcesChangeAware>()
+
+    private val defaultLoaders = mutableListOf<ResourcesLoader>()
 
     /** If enable the dynamic manager globally. */
     var enabled: Boolean = true
@@ -37,14 +40,18 @@ class Dynamic private constructor() {
         application: Application,
         enabled: Boolean
     ) {
+        this.application = application
         this.enabled = enabled
         UtilsApp.init(application)
-        application.registerActivityLifecycleCallbacks(
-            DynamicActivityLifecycleCallbacks(this)
-        )
+        dynamicActivityLifecycleCallbacks = DynamicActivityLifecycleCallbacks(this)
+        application.registerActivityLifecycleCallbacks(dynamicActivityLifecycleCallbacks)
         if (enabled) {
             hookApplicationContext(application)
         }
+        defaultLoaders.add(ExternalResourcesLoader(application))
+        defaultLoaders.add(AssetsResourcesLoader())
+        defaultLoaders.add(DefaultResourcesLoader(application))
+        defaultLoaders.add(ResourcesResourcesLoader(application))
         defaultLoaders.forEach { loaders[it.target()] = it }
     }
 
@@ -68,6 +75,7 @@ class Dynamic private constructor() {
                 }
 
                 override fun onSucceed(resources: IResources) {
+                    notifyResourcesChanged(resources, source)
                     listener?.onSucceed(resources)
                 }
 
@@ -78,9 +86,33 @@ class Dynamic private constructor() {
         )
     }
 
+    /** Register dynamic resources change aware. */
+    fun registerDynamicResourcesChangeAware(
+        aware: DynamicResourcesChangeAware
+    ) {
+        if (!dynamicResourcesChangeAwareList.contains(aware))
+            dynamicResourcesChangeAwareList.add(aware)
+    }
+
+    /** Unregister dynamic resources change aware. */
+    fun unRegisterDynamicResourcesChangeAware(
+        aware: DynamicResourcesChangeAware
+    ) {
+        dynamicResourcesChangeAwareList.remove(aware)
+    }
+
     /** Hook application context. */
     private fun hookApplicationContext(application: Application) {
-        DynamicContextHooker.hook(application)
+        appDynamicContext = DynamicContextHooker.hook(application, this)
+    }
+
+    private fun notifyResourcesChanged(
+        resources: IResources,
+        source: SourceType
+    ) {
+        dynamicResourcesChangeAwareList.forEach {
+            it.onResourcesChanged(resources, source)
+        }
     }
 
     private fun addResourceLoader(loader: ResourcesLoader, replace: Boolean) {

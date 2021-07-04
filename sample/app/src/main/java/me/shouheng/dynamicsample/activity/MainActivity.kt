@@ -3,6 +3,7 @@ package me.shouheng.dynamicsample.activity
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import me.shouheng.dynamicsample.R
+import me.shouheng.dynamicsample.R.string.fab_click_message
 import me.shouheng.dynamicsample.databinding.ActivityMainBinding
 import me.shouheng.dynamicsample.fragment.FirstFragment
 import me.shouheng.dynamicsample.fragment.SecondFragment
@@ -19,7 +20,7 @@ class MainActivity : ViewBindingActivity<EmptyViewModel, ActivityMainBinding>(),
     override fun doCreateView(savedInstanceState: Bundle?) {
         setSupportActionBar(binding.toolbar)
         binding.fab.onDebouncedClick {
-            Snackbar.make(it, getString(R.string.fab_click_message), Snackbar.LENGTH_LONG)
+            Snackbar.make(it, getString(fab_click_message), Snackbar.LENGTH_LONG)
                 .setAction(stringOf(R.string.fab_click_action), null).show()
         }
         changeToFirstFragment()

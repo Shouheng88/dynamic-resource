@@ -5,6 +5,8 @@ interface SourceType
 
 /** Source enums for dynamic resources. */
 enum class Source : SourceType {
+    /** Resource of default. */
+    DEFAULT,
 
     /** Resources from assets of App. */
     ASSETS,

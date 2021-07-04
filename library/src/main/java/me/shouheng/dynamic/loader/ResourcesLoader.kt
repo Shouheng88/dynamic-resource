@@ -32,6 +32,3 @@ interface ResourcesLoaderListener {
     /** On failed with error code and message. */
     fun onFailed(code: String, message: String)
 }
-
-const val ERROR_CODE_FILE_NOT_FOUND         = "-1"
-const val ERROR_CODE_HOOK_ASSET_MANAGER     = "-2"
