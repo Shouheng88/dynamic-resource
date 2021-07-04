@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">DYNAMIC RESOURCES</string>
+    <string name="title_activity_main">MAINACTIVITY</string>
+    <string name="next">NEXT</string>
+    <string name="previous">PREVIOUS</string>
+    <string name="load_default">LOAD DEFAULT</string>
+    <string name="load_another">LOAD ANOTHER</string>
+
+    <string name="fab_click_action">ACTION</string>
+    <string name="fab_click_message">REPLACE WITH YOUR OWN ACTION</string>
+
+    <string name="say_hello">SAY HELLO!</string>
+    <string name="start_service">START SERVICE</string>
+    <string name="hello_first_fragment">HELLO FROM FIRST FRAGMENT.</string>
+    <string name="hello_second_fragment">HELLO FROM SECOND FRAGMENT.</string>
+
+    <string name="hello_from_service">HELLO FROM SAMPLE SERVICE.</string>
+</resources>

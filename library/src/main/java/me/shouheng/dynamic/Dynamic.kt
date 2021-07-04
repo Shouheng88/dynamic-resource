@@ -9,6 +9,7 @@ import me.shouheng.dynamic.loader.*
 import me.shouheng.dynamic.resources.DynamicResourcesAware
 import me.shouheng.dynamic.resources.IResources
 import me.shouheng.dynamic.resources.WeakDynamicResourcesAware
+import me.shouheng.dynamic.utils.DynamicL
 import me.shouheng.utils.UtilsApp
 import java.lang.ref.ReferenceQueue
 import java.util.concurrent.locks.ReentrantReadWriteLock
@@ -56,7 +57,7 @@ class Dynamic private constructor() {
             hookApplicationContext(application)
         }
         defaultLoaders.add(ExternalResourcesLoader(application))
-        defaultLoaders.add(AssetsResourcesLoader())
+        defaultLoaders.add(AssetsResourcesLoader(application))
         defaultLoaders.add(DefaultResourcesLoader(application))
         defaultLoaders.add(ResourcesResourcesLoader(application))
         defaultLoaders.forEach { loaders[it.target()] = it }
@@ -178,6 +179,9 @@ class Dynamic private constructor() {
         /** If enable the dynamic manager globally. */
         var enabled: Boolean = true
 
+        /** Is log allowed. */
+        var allowLog: Boolean = false
+
         /**
          * Add one resources loader.
          *
@@ -199,6 +203,7 @@ class Dynamic private constructor() {
                 this@Builder.loaders.forEach {
                     addResourceLoader(it.first, it.second)
                 }
+                DynamicL.getConfig().setLogSwitch(allowLog)
             }
         }
     }
