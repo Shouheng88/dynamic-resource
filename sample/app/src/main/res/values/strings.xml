@@ -10,6 +10,9 @@
     <string name="fab_click_message">Replace with your own action</string>
 
     <string name="say_hello">Say hello!</string>
+    <string name="start_service">Start service</string>
     <string name="hello_first_fragment">Hello from first fragment.</string>
     <string name="hello_second_fragment">Hello from second fragment.</string>
+
+    <string name="hello_from_service">Hello from sample service.</string>
 </resources>

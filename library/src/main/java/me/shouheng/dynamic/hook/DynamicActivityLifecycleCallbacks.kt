@@ -35,6 +35,7 @@ class DynamicActivityLifecycleCallbacks(
 
     override fun onActivityDestroyed(activity: Activity?) {
         removeResourcesNoneExist()
+        dynamic.clearResourcesNoneExist()
     }
 
     override fun onActivitySaveInstanceState(activity: Activity?, outState: Bundle?) { /*noop*/ }
@@ -42,7 +43,8 @@ class DynamicActivityLifecycleCallbacks(
     /** Hook the context of activity. */
     private fun hookActivityContext(activity: Activity) {
         DynamicContextHooker.hook(activity, dynamic)?.let {
-            dynamicResourcesList.add(KeyWeakDynamicResources(it, referenceQueue))
+            dynamicResourcesList.add(KeyWeakDynamicResources(
+                activity.javaClass.name, it, referenceQueue))
         }
     }
 
@@ -92,6 +94,11 @@ class DynamicActivityLifecycleCallbacks(
 
 /** Key weak dynamic resources. */
 class KeyWeakDynamicResources(
+    private val target: String,
     referent: DynamicResources?,
     q: ReferenceQueue<in DynamicResources>?
-) : WeakReference<DynamicResources>(referent, q)
+) : WeakReference<DynamicResources>(referent, q) {
+    override fun toString(): String {
+        return "[$target]" + super.toString()
+    }
+}

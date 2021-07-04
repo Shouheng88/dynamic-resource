@@ -24,7 +24,8 @@ object DynamicContextHooker {
             val baseContext = application.baseContext
             val field = ContextWrapper::class.java.getDeclaredField("mBase")
             field.isAccessible = true
-            val dynamicContext = DynamicContext(baseContext, dynamic)
+            val dynamicContext = DynamicContext(
+                application.javaClass.name + "@${application.hashCode()}", baseContext, dynamic)
             field.set(application, dynamicContext)
             return dynamicContext
         } catch (e: Exception) {
@@ -33,9 +34,27 @@ object DynamicContextHooker {
         return null
     }
 
-    /** Hook service. */
-    fun hook(service: Service) {
-
+    /**
+     * Hook service.
+     *
+     * Just same as application [hook], should be called after [Service.attachBaseContext].
+     */
+    fun hook(
+        service: Service,
+        dynamic: Dynamic
+    ): DynamicContext? {
+        try {
+            val baseContext = service.baseContext
+            val field = ContextWrapper::class.java.getDeclaredField("mBase")
+            field.isAccessible = true
+            val dynamicContext = DynamicContext(
+                service.javaClass.name + "@${service.hashCode()}", baseContext, dynamic)
+            field.set(service, dynamicContext)
+            return dynamicContext
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return null
     }
 
     /** Hook activity. */
@@ -44,7 +63,9 @@ object DynamicContextHooker {
         dynamic: Dynamic
     ): DynamicResources? {
         try {
-            val dynamicResources = DynamicResources(null, activity.resources, dynamic)
+            val dynamicResources = DynamicResources(
+                activity.javaClass.name + "@${activity.hashCode()}",
+                dynamic.currentResources, activity.resources, dynamic)
             val filed = ContextThemeWrapper::class.java.getDeclaredField("mResources")
             filed.isAccessible = true
             filed.set(activity, dynamicResources)

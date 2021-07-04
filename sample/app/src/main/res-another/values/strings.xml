@@ -9,4 +9,6 @@
 
     <string name="hello_first_fragment_another">[Another] Hello from first fragment.</string>
     <string name="hello_second_fragment_another">[Another] Hello from second fragment.</string>
+
+    <string name="hello_from_service_another">[Another] Hello from sample service.</string>
 </resources>

@@ -12,7 +12,7 @@ import android.util.TypedValue
 import me.shouheng.dynamic.Dynamic
 import me.shouheng.dynamic.loader.Source
 import me.shouheng.dynamic.loader.SourceType
-import me.shouheng.dynamic.resources.DynamicResourcesChangeAware
+import me.shouheng.dynamic.resources.DynamicResourcesAware
 import me.shouheng.dynamic.resources.IResources
 import java.io.InputStream
 
@@ -23,6 +23,7 @@ import java.io.InputStream
  * @see <a href="https://developer.android.com/guide/topics/resources/available-resources.html">android resouces</a>
  */
 class DynamicResources(
+    private val target: String,
     private var resources: IResources?,
     appResources: Resources,
     private val dynamic: Dynamic
@@ -30,7 +31,7 @@ class DynamicResources(
     appResources.assets,
     appResources.displayMetrics,
     appResources.configuration
-), DynamicResourcesChangeAware {
+), DynamicResourcesAware {
 
     init {
         dynamic.registerDynamicResourcesChangeAware(this)
@@ -38,8 +39,7 @@ class DynamicResources(
 
     override fun getString(id: Int): String {
         var result = super.getString(id)
-        if (resources == null || !dynamic.enabled)
-            return result
+        if (resources == null || !dynamic.enabled) return result
         try {
             val typeName = super.getResourceTypeName(id)
             val entryName = super.getResourceEntryName(id)
@@ -484,4 +484,10 @@ class DynamicResources(
             this.resources = null
         }
     }
+
+    override fun toString(): String {
+        return "[$target]" + super.toString()
+    }
+
+    override fun name(): String? = target
 }

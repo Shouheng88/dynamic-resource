@@ -2,17 +2,8 @@ package me.shouheng.dynamic.hook
 
 import android.content.Context
 import android.content.ContextWrapper
-import android.content.res.AssetFileDescriptor
-import android.content.res.ColorStateList
 import android.content.res.Resources
-import android.content.res.XmlResourceParser
-import android.graphics.Typeface
-import android.graphics.drawable.Drawable
-import android.util.TypedValue
 import me.shouheng.dynamic.Dynamic
-import me.shouheng.dynamic.resources.DynamicResourcesChangeAware
-import me.shouheng.dynamic.resources.IResources
-import java.io.InputStream
 
 /**
  * Context proxy.
@@ -22,6 +13,7 @@ import java.io.InputStream
  * in dynamic resources. So we are unable to make a downgrade when failed.
  */
 class DynamicContext(
+    private val target: String,
     base: Context,
     private val dynamic: Dynamic
 ) : ContextWrapper(base) {
@@ -31,9 +23,14 @@ class DynamicContext(
     override fun getResources(): Resources {
         val resources = super.getResources()
         if (dynamicResources == null) {
-            dynamicResources = DynamicResources(null, resources, dynamic)
+            dynamicResources = DynamicResources(
+                target, dynamic.currentResources, resources, dynamic
+            )
         }
         return dynamicResources!!
     }
 
+    override fun toString(): String {
+        return "[$target]" + super.toString()
+    }
 }

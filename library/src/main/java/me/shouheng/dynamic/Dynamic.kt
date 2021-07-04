@@ -6,10 +6,12 @@ import me.shouheng.dynamic.hook.DynamicActivityLifecycleCallbacks
 import me.shouheng.dynamic.hook.DynamicContext
 import me.shouheng.dynamic.hook.DynamicContextHooker
 import me.shouheng.dynamic.loader.*
-import me.shouheng.dynamic.resources.DynamicResourcesChangeAware
+import me.shouheng.dynamic.resources.DynamicResourcesAware
 import me.shouheng.dynamic.resources.IResources
+import me.shouheng.dynamic.resources.WeakDynamicResourcesAware
 import me.shouheng.utils.UtilsApp
-import java.util.concurrent.CopyOnWriteArrayList
+import java.lang.ref.ReferenceQueue
+import java.util.concurrent.locks.ReentrantReadWriteLock
 
 @DslMarker
 annotation class DynamicResourcesDSL
@@ -27,10 +29,13 @@ class Dynamic private constructor() {
     private var appDynamicContext: DynamicContext? = null
     private var currentSourceType: SourceType = Source.DEFAULT
     private var currentSourcePath: String = ""
+    internal var currentResources: IResources? = null
+    private val readWriteLock = ReentrantReadWriteLock()
 
     private val loaders = mutableMapOf<SourceType, ResourcesLoader>()
 
-    private val dynamicResourcesChangeAwareList = CopyOnWriteArrayList<DynamicResourcesChangeAware>()
+    private val dynamicResourcesChangeAwareList = mutableListOf<WeakDynamicResourcesAware>()
+    private val dynamicResourcesReferenceQueue = ReferenceQueue<DynamicResourcesAware>()
 
     private val defaultLoaders = mutableListOf<ResourcesLoader>()
 
@@ -80,6 +85,7 @@ class Dynamic private constructor() {
                 }
 
                 override fun onSucceed(resources: IResources) {
+                    currentResources = resources
                     notifyResourcesChanged(resources, source)
                     listener?.onSucceed(resources)
                 }
@@ -93,17 +99,44 @@ class Dynamic private constructor() {
 
     /** Register dynamic resources change aware. */
     fun registerDynamicResourcesChangeAware(
-        aware: DynamicResourcesChangeAware
+        aware: DynamicResourcesAware
     ) {
-        if (!dynamicResourcesChangeAwareList.contains(aware))
-            dynamicResourcesChangeAwareList.add(aware)
+        readWriteLock.writeLock().lock()
+        val existed = dynamicResourcesChangeAwareList.find {
+            it.get() == aware
+        }
+        if (existed == null) {
+            dynamicResourcesChangeAwareList.add(WeakDynamicResourcesAware(
+                aware.name()?:aware.javaClass.name,
+                aware,
+                dynamicResourcesReferenceQueue
+            ))
+        }
+        readWriteLock.writeLock().unlock()
     }
 
     /** Unregister dynamic resources change aware. */
     fun unRegisterDynamicResourcesChangeAware(
-        aware: DynamicResourcesChangeAware
+        aware: DynamicResourcesAware
     ) {
-        dynamicResourcesChangeAwareList.remove(aware)
+        readWriteLock.writeLock().lock()
+        dynamicResourcesChangeAwareList.find {
+            it.get() == aware
+        }?.let {
+            dynamicResourcesChangeAwareList.remove(it)
+        }
+        readWriteLock.writeLock().unlock()
+    }
+
+    /** Clear none existed dynamic resources. */
+    internal fun clearResourcesNoneExist() {
+        readWriteLock.writeLock().lock()
+        var removed = dynamicResourcesReferenceQueue.poll()
+        while (removed != null && removed.get() == null) {
+            dynamicResourcesChangeAwareList.remove(removed)
+            removed = dynamicResourcesReferenceQueue.poll()
+        }
+        readWriteLock.writeLock().unlock()
     }
 
     /** Check should reload resources. */
@@ -120,9 +153,11 @@ class Dynamic private constructor() {
         resources: IResources,
         source: SourceType
     ) {
+        readWriteLock.readLock().lock()
         dynamicResourcesChangeAwareList.forEach {
-            it.onResourcesChanged(resources, source)
+            it.get()?.onResourcesChanged(resources, source)
         }
+        readWriteLock.readLock().unlock()
     }
 
     private fun addResourceLoader(loader: ResourcesLoader, replace: Boolean) {
@@ -169,7 +204,11 @@ class Dynamic private constructor() {
     }
 
     companion object {
+        /** The singleton dynamic instance. */
         private val dynamic = Dynamic()
+
+        /** Get the dynamic instance. */
+        fun get() = dynamic
     }
 }
 

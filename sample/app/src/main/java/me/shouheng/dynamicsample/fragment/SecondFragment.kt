@@ -1,9 +1,11 @@
 package me.shouheng.dynamicsample.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import me.shouheng.dynamicsample.R
 import me.shouheng.dynamicsample.activity.FragmentChangeInteraction
 import me.shouheng.dynamicsample.databinding.FragmentSecondBinding
+import me.shouheng.dynamicsample.service.SampleService
 import me.shouheng.utils.ktx.onDebouncedClick
 import me.shouheng.vmlib.base.ViewBindingFragment
 import me.shouheng.vmlib.comn.EmptyViewModel
@@ -17,6 +19,9 @@ class SecondFragment : ViewBindingFragment<EmptyViewModel, FragmentSecondBinding
         }
         binding.buttonToast.onDebouncedClick {
             toast(R.string.hello_second_fragment)
+        }
+        binding.buttonService.onDebouncedClick {
+            context?.startService(Intent(activity, SampleService::class.java))
         }
     }
 }
