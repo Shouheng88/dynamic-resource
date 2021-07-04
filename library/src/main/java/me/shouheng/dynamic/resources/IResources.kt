@@ -14,7 +14,7 @@ import java.io.InputStream
 /** The resources. */
 interface IResources {
 
-   fun getIdentifier(name: String, defType: String): Int
+   fun getIdentifier(name: String, defType: String?): Int
 
    fun getString(id: Int): String
 

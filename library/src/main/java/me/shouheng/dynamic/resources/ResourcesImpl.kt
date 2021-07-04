@@ -17,7 +17,7 @@ open class ResourcesImpl(
     private val packageName: String
 ): IResources {
 
-    override fun getIdentifier(name: String, defType: String): Int {
+    override fun getIdentifier(name: String, defType: String?): Int {
         return resources.getIdentifier(name, defType, packageName)
     }
 

@@ -25,6 +25,8 @@ class Dynamic private constructor() {
     private lateinit var application: Application
     private var dynamicActivityLifecycleCallbacks: DynamicActivityLifecycleCallbacks? = null
     private var appDynamicContext: DynamicContext? = null
+    private var currentSourceType: SourceType = Source.DEFAULT
+    private var currentSourcePath: String = ""
 
     private val loaders = mutableMapOf<SourceType, ResourcesLoader>()
 
@@ -67,6 +69,9 @@ class Dynamic private constructor() {
         source: SourceType,
         listener: ResourcesLoaderListener?
     ) {
+        if (!checkShouldReload(path, source)) return
+        currentSourcePath = path
+        currentSourceType = source
         loaders[source]?.load(
             path,
             object : ResourcesLoaderListener {
@@ -99,6 +104,11 @@ class Dynamic private constructor() {
         aware: DynamicResourcesChangeAware
     ) {
         dynamicResourcesChangeAwareList.remove(aware)
+    }
+
+    /** Check should reload resources. */
+    private fun checkShouldReload(path: String, source: SourceType): Boolean {
+        return source != currentSourceType || path != currentSourcePath
     }
 
     /** Hook application context. */

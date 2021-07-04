@@ -9,7 +9,7 @@ class ResourcesResources(
     packageName: String
 ) : ResourcesImpl(resources, packageName) {
 
-    override fun getIdentifier(name: String, defType: String): Int {
+    override fun getIdentifier(name: String, defType: String?): Int {
         return super.getIdentifier("${name}_$dirName", defType)
     }
 }

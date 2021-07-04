@@ -2,7 +2,6 @@ package me.shouheng.dynamicsample
 
 import android.app.Application
 import me.shouheng.dynamic.Dynamic
-import me.shouheng.dynamic.DynamicResourcesDSL
 import me.shouheng.dynamic.dynamic
 import me.shouheng.dynamic.loader.ResourcesLoader
 import me.shouheng.dynamic.loader.ResourcesLoaderListener
@@ -11,8 +10,6 @@ import me.shouheng.vmlib.VMLib
 
 /** The Application for sample. */
 class App : Application() {
-
-    lateinit var dynamic: Dynamic
 
     override fun onCreate() {
         super.onCreate()
@@ -34,5 +31,6 @@ class App : Application() {
 
     companion object {
         lateinit var app: App
+        lateinit var dynamic: Dynamic
     }
 }

@@ -15,8 +15,11 @@ class FirstFragment : ViewBindingFragment<EmptyViewModel, FragmentFirstBinding>(
         binding.buttonFirst.onDebouncedClick {
             (activity as? FragmentChangeInteraction)?.changeToSecondFragment()
         }
+        binding.btnLoadDefault.onDebouncedClick {
+            App.dynamic.load("", Source.DEFAULT, null)
+        }
         binding.btnLoadAnother.onDebouncedClick {
-            App.app.dynamic.load("another", Source.RESOURCES, null)
+            App.dynamic.load("another", Source.RESOURCES, null)
         }
     }
 }
