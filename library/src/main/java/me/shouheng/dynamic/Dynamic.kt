@@ -65,9 +65,9 @@ class Dynamic private constructor() {
     /**
      * Load resources.
      *
-     * - [path]     the path to load dynamic resources.
-     * - [source]   the resources source.
-     * - [listener] the resource load state callback.
+     * @param path the path to load dynamic resources.
+     * @param source the resources source.
+     * @param listener the resource load state callback.
      */
     fun load(
         path: String,
@@ -181,8 +181,8 @@ class Dynamic private constructor() {
         /**
          * Add one resources loader.
          *
-         * - [loader]  the resources loader.
-         * - [replace] will replace the original resources loader of target type, true to replace,
+         * @param loader the resources loader.
+         * @param replace will replace the original resources loader of target type, true to replace,
          * else this loader will be ignored.
          */
         fun addResourceLoader(loader: ResourcesLoader, replace: Boolean) {
