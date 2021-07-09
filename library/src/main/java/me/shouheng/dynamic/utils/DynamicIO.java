@@ -22,11 +22,7 @@ import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * 用来处理单个文件的读写
- *
- * @author WngShhng 2019-05-08 21:30
- */
+/** File IO operator. */
 public final class DynamicIO {
 
     private static int sBufferSize = 8192;

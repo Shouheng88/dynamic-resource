@@ -67,25 +67,30 @@ class Dynamic private constructor() {
     internal fun init(
         application: Application,
         enabled: Boolean,
-        executor: Executor? = null
+        executor: Executor? = null,
+        sourceTypeStore: ISourceTypeStore?
     ) {
         this.application = application
-        DynamicL.CONFIG = DynamicL.Config(application)
         this.enabled = enabled
         this.executor = executor ?: this.executor
+        this.sourceTypeStore = sourceTypeStore?:DefaultSourceTypeStore(application)
+        DynamicL.CONFIG = DynamicL.Config(application)
         dynamicActivityLifecycleCallbacks = DynamicActivityLifecycleCallbacks(this)
         application.registerActivityLifecycleCallbacks(dynamicActivityLifecycleCallbacks)
         if (enabled) {
             hookApplicationContext(application)
         }
         listOf(
-            ExternalResourcesLoader(application),
-            AssetsResourcesLoader(application),
+            ExternalResourcesLoader(application, this),
+            AssetsResourcesLoader(application, this),
             DefaultResourcesLoader(application),
             ResourcesResourcesLoader(application)
-        ).forEach { loaders[it.target()] = it }
-        val store = sourceTypeStore?:DefaultSourceTypeStore(application)
-        load(store.getSourcePath(), store.getSourceType(), null)
+        ).forEach {
+            loaders[it.target()] = it
+        }
+        sourceTypeStore?.let {
+            load(it.getSourcePath(), it.getSourceType(), null)
+        }
     }
 
     /**
@@ -212,6 +217,9 @@ class Dynamic private constructor() {
         /** Is log allowed. */
         var allowLog: Boolean = false
 
+        /** The store for source type. */
+        var sourceTypeStore: ISourceTypeStore? = null
+
         /**
          * Add one resources loader.
          *
@@ -219,7 +227,7 @@ class Dynamic private constructor() {
          * @param replace will replace the original resources loader of target type, true to replace,
          * else this loader will be ignored.
          */
-        fun addResourceLoader(loader: ResourcesLoader, replace: Boolean) {
+        fun addLoader(loader: ResourcesLoader, replace: Boolean) {
             loaders.add(Pair(loader, replace))
         }
 
@@ -229,7 +237,8 @@ class Dynamic private constructor() {
                 init(
                     this@Builder.application!!,
                     this@Builder.enabled,
-                    this@Builder.executor
+                    this@Builder.executor,
+                    this@Builder.sourceTypeStore
                 )
                 this@Builder.loaders.forEach {
                     addResourceLoader(it.first, it.second)

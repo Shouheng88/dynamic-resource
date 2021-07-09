@@ -4,13 +4,14 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.content.res.AssetManager
 import android.content.res.Resources
-import android.os.AsyncTask
+import me.shouheng.dynamic.Dynamic
 import me.shouheng.dynamic.resources.ExternalResources
 import java.io.File
 
 /** External resources loader. */
 open class ExternalResourcesLoader(
-    private val context: Context
+    private val context: Context,
+    private val dynamic: Dynamic
 ) : ResourcesLoader {
 
     override fun target(): SourceType = SourceType.EXTERNAL
@@ -27,7 +28,7 @@ open class ExternalResourcesLoader(
             return
         }
 
-        AsyncTask.execute {
+        dynamic.executor.execute {
             try {
                 val manager = context.packageManager
                 val info = manager.getPackageArchiveInfo(path, PackageManager.GET_ACTIVITIES)

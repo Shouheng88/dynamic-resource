@@ -1,17 +1,9 @@
 package me.shouheng.dynamicsample
 
-import android.Manifest
-import android.annotation.SuppressLint
 import android.app.Application
-import android.content.pm.PackageManager
-import android.support.v4.app.ActivityCompat
 import android.view.InflateException
 import me.shouheng.dynamic.Dynamic
 import me.shouheng.dynamic.dynamic
-import me.shouheng.dynamic.loader.ResourcesLoader
-import me.shouheng.dynamic.loader.ResourcesLoaderListener
-import me.shouheng.dynamic.loader.SourceType
-import me.shouheng.utils.stability.CrashHelper
 import me.shouheng.vmlib.VMLib
 
 /** The Application for sample. */
