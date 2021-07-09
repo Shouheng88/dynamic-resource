@@ -17,7 +17,7 @@ class AssetsResourcesLoader(
     override fun target(): SourceType = SourceType.ASSETS
 
     override fun load(path: String, listener: ResourcesLoaderListener) {
-        val dataPath = DynamicPath.getInternalAppDataPath()
+        val dataPath = DynamicPath.getInternalAppDataPath(context)
         if (!TextUtils.isEmpty(dataPath)) {
             AsyncTask.execute {
                 val external = copyToExternalStorage(path, dataPath)

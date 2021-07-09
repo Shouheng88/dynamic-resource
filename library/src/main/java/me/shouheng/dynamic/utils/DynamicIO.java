@@ -22,11 +22,6 @@ import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
 
-import static me.shouheng.utils.data.StringUtils.isSpace;
-import static me.shouheng.utils.store.FileUtils.createOrExistsFile;
-import static me.shouheng.utils.store.FileUtils.getFileByPath;
-import static me.shouheng.utils.store.FileUtils.isFileExists;
-
 /**
  * 用来处理单个文件的读写
  *
@@ -39,11 +34,11 @@ public final class DynamicIO {
     /*------------------------------------- 写入方法 ----------------------------------------*/
 
     public static boolean writeFileFromIS(final String filePath, final InputStream is) {
-        return writeFileFromIS(getFileByPath(filePath), is, false);
+        return writeFileFromIS(DynamicFile.INSTANCE.getFileByPath(filePath), is, false);
     }
 
     public static boolean writeFileFromIS(final String filePath, final InputStream is, final boolean append) {
-        return writeFileFromIS(getFileByPath(filePath), is, append);
+        return writeFileFromIS(DynamicFile.INSTANCE.getFileByPath(filePath), is, append);
     }
 
     public static boolean writeFileFromIS(final File file, final InputStream is) {
@@ -51,7 +46,7 @@ public final class DynamicIO {
     }
 
     public static boolean writeFileFromIS(final File file, final InputStream is, final boolean append) {
-        if (!createOrExistsFile(file) || is == null) return false;
+        if (!DynamicFile.INSTANCE.createOrExistsFile(file) || is == null) return false;
         OutputStream os = null;
         try {
             os = new BufferedOutputStream(new FileOutputStream(file, append));
@@ -70,11 +65,11 @@ public final class DynamicIO {
     }
 
     public static boolean writeFileFromBytesByStream(final String filePath, final byte[] bytes) {
-        return writeFileFromBytesByStream(getFileByPath(filePath), bytes, false);
+        return writeFileFromBytesByStream(DynamicFile.INSTANCE.getFileByPath(filePath), bytes, false);
     }
 
     public static boolean writeFileFromBytesByStream(final String filePath, final byte[] bytes, final boolean append) {
-        return writeFileFromBytesByStream(getFileByPath(filePath), bytes, append);
+        return writeFileFromBytesByStream(DynamicFile.INSTANCE.getFileByPath(filePath), bytes, append);
     }
 
     public static boolean writeFileFromBytesByStream(final File file, final byte[] bytes) {
@@ -82,7 +77,7 @@ public final class DynamicIO {
     }
 
     public static boolean writeFileFromBytesByStream(final File file, final byte[] bytes, final boolean append) {
-        if (bytes == null || !createOrExistsFile(file)) return false;
+        if (bytes == null || !DynamicFile.INSTANCE.createOrExistsFile(file)) return false;
         BufferedOutputStream bos = null;
         try {
             bos = new BufferedOutputStream(new FileOutputStream(file, append));
@@ -97,11 +92,11 @@ public final class DynamicIO {
     }
 
     public static boolean writeFileFromBytesByChannel(final String filePath, final byte[] bytes, final boolean isForce) {
-        return writeFileFromBytesByChannel(getFileByPath(filePath), bytes, false, isForce);
+        return writeFileFromBytesByChannel(DynamicFile.INSTANCE.getFileByPath(filePath), bytes, false, isForce);
     }
 
     public static boolean writeFileFromBytesByChannel(final String filePath, final byte[] bytes, final boolean append, final boolean isForce) {
-        return writeFileFromBytesByChannel(getFileByPath(filePath), bytes, append, isForce);
+        return writeFileFromBytesByChannel(DynamicFile.INSTANCE.getFileByPath(filePath), bytes, append, isForce);
     }
 
     public static boolean writeFileFromBytesByChannel(final File file, final byte[] bytes, final boolean isForce) {
@@ -130,7 +125,7 @@ public final class DynamicIO {
     }
 
     public static boolean writeFileFromBytesByMap(final String filePath, final byte[] bytes, final boolean append, final boolean isForce) {
-        return writeFileFromBytesByMap(getFileByPath(filePath), bytes, append, isForce);
+        return writeFileFromBytesByMap(DynamicFile.INSTANCE.getFileByPath(filePath), bytes, append, isForce);
     }
 
     public static boolean writeFileFromBytesByMap(final File file, final byte[] bytes, final boolean isForce) {
@@ -138,7 +133,7 @@ public final class DynamicIO {
     }
 
     public static boolean writeFileFromBytesByMap(final File file, final byte[] bytes, final boolean append, final boolean isForce) {
-        if (bytes == null || !createOrExistsFile(file)) return false;
+        if (bytes == null || !DynamicFile.INSTANCE.createOrExistsFile(file)) return false;
         FileChannel fc = null;
         try {
             fc = new FileOutputStream(file, append).getChannel();
@@ -155,11 +150,11 @@ public final class DynamicIO {
     }
 
     public static boolean writeFileFromString(final String filePath, final String content) {
-        return writeFileFromString(getFileByPath(filePath), content, false);
+        return writeFileFromString(DynamicFile.INSTANCE.getFileByPath(filePath), content, false);
     }
 
     public static boolean writeFileFromString(final String filePath, final String content, final boolean append) {
-        return writeFileFromString(getFileByPath(filePath), content, append);
+        return writeFileFromString(DynamicFile.INSTANCE.getFileByPath(filePath), content, append);
     }
 
     public static boolean writeFileFromString(final File file, final String content) {
@@ -168,7 +163,7 @@ public final class DynamicIO {
 
     public static boolean writeFileFromString(final File file, final String content, final boolean append) {
         if (file == null || content == null) return false;
-        if (!createOrExistsFile(file)) return false;
+        if (!DynamicFile.INSTANCE.createOrExistsFile(file)) return false;
         BufferedWriter bw = null;
         try {
             bw = new BufferedWriter(new FileWriter(file, append));
@@ -185,11 +180,11 @@ public final class DynamicIO {
     /*------------------------------------- 读取方法 ----------------------------------------*/
 
     public static List<String> readFile2List(final String filePath) {
-        return readFile2List(getFileByPath(filePath), null);
+        return readFile2List(DynamicFile.INSTANCE.getFileByPath(filePath), null);
     }
 
     public static List<String> readFile2List(final String filePath, final String charsetName) {
-        return readFile2List(getFileByPath(filePath), charsetName);
+        return readFile2List(DynamicFile.INSTANCE.getFileByPath(filePath), charsetName);
     }
 
     public static List<String> readFile2List(final File file) {
@@ -201,11 +196,11 @@ public final class DynamicIO {
     }
 
     public static List<String> readFile2List(final String filePath, final int st, final int end) {
-        return readFile2List(getFileByPath(filePath), st, end, null);
+        return readFile2List(DynamicFile.INSTANCE.getFileByPath(filePath), st, end, null);
     }
 
     public static List<String> readFile2List(final String filePath, final int st, final int end, final String charsetName) {
-        return readFile2List(getFileByPath(filePath), st, end, charsetName);
+        return readFile2List(DynamicFile.INSTANCE.getFileByPath(filePath), st, end, charsetName);
     }
 
     public static List<String> readFile2List(final File file, final int st, final int end) {
@@ -213,14 +208,14 @@ public final class DynamicIO {
     }
 
     public static List<String> readFile2List(final File file, final int st, final int end, final String charsetName) {
-        if (!isFileExists(file)) return null;
+        if (!DynamicFile.INSTANCE.isFileExists(file)) return null;
         if (st > end) return null;
         BufferedReader reader = null;
         try {
             String line;
             int curLine = 1;
             List<String> list = new ArrayList<>();
-            if (isSpace(charsetName)) {
+            if (DynamicFile.INSTANCE.isSpace(charsetName)) {
                 reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
             } else {
                 reader = new BufferedReader(
@@ -242,11 +237,11 @@ public final class DynamicIO {
     }
 
     public static String readFile2String(final String filePath) {
-        return readFile2String(getFileByPath(filePath), null);
+        return readFile2String(DynamicFile.INSTANCE.getFileByPath(filePath), null);
     }
 
     public static String readFile2String(final String filePath, final String charsetName) {
-        return readFile2String(getFileByPath(filePath), charsetName);
+        return readFile2String(DynamicFile.INSTANCE.getFileByPath(filePath), charsetName);
     }
 
     public static String readFile2String(final File file) {
@@ -256,7 +251,7 @@ public final class DynamicIO {
     public static String readFile2String(final File file, final String charsetName) {
         byte[] bytes = readFile2BytesByStream(file);
         if (bytes == null) return null;
-        if (isSpace(charsetName)) {
+        if (DynamicFile.INSTANCE.isSpace(charsetName)) {
             return new String(bytes);
         } else {
             try {
@@ -269,11 +264,11 @@ public final class DynamicIO {
     }
 
     public static byte[] readFile2BytesByStream(final String filePath) {
-        return readFile2BytesByStream(getFileByPath(filePath));
+        return readFile2BytesByStream(DynamicFile.INSTANCE.getFileByPath(filePath));
     }
 
     public static byte[] readFile2BytesByStream(final File file) {
-        if (!isFileExists(file)) return null;
+        if (!DynamicFile.INSTANCE.isFileExists(file)) return null;
         try {
             return is2Bytes(new FileInputStream(file));
         } catch (FileNotFoundException e) {
@@ -283,11 +278,11 @@ public final class DynamicIO {
     }
 
     public static byte[] readFile2BytesByChannel(final String filePath) {
-        return readFile2BytesByChannel(getFileByPath(filePath));
+        return readFile2BytesByChannel(DynamicFile.INSTANCE.getFileByPath(filePath));
     }
 
     public static byte[] readFile2BytesByChannel(final File file) {
-        if (!isFileExists(file)) return null;
+        if (!DynamicFile.INSTANCE.isFileExists(file)) return null;
         FileChannel fc = null;
         try {
             fc = new RandomAccessFile(file, "r").getChannel();
@@ -305,11 +300,11 @@ public final class DynamicIO {
     }
 
     public static byte[] readFile2BytesByMap(final String filePath) {
-        return readFile2BytesByMap(getFileByPath(filePath));
+        return readFile2BytesByMap(DynamicFile.INSTANCE.getFileByPath(filePath));
     }
 
     public static byte[] readFile2BytesByMap(final File file) {
-        if (!isFileExists(file)) return null;
+        if (!DynamicFile.INSTANCE.isFileExists(file)) return null;
         FileChannel fc = null;
         try {
             fc = new RandomAccessFile(file, "r").getChannel();

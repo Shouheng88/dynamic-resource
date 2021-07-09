@@ -30,7 +30,6 @@ dependencies {
     implementation "com.android.support:appcompat-v7:$supportLibVersion"
     implementation "com.android.support:design:$supportLibVersion"
     compileOnly "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    api "com.github.Shouheng88:utils-core:${androidUtilsVersion}"
 }
 
 //publish {

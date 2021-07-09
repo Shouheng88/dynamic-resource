@@ -1,10 +1,9 @@
 package me.shouheng.dynamic.utils;
 
+import android.app.Application;
 import android.content.ClipData;
 import android.content.ComponentName;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
@@ -51,9 +50,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import me.shouheng.utils.UtilsApp;
-import me.shouheng.utils.data.StringUtils;
-
 public final class DynamicL {
 
     public static final int V = Log.VERBOSE;
@@ -92,7 +88,7 @@ public final class DynamicL {
     private static final String NULL           = "null";
     private static final String ARGS           = "args";
     private static final String PLACEHOLDER    = " ";
-    private static final Config CONFIG         = new Config();
+    public static Config CONFIG         = null;
 
     private static final ThreadLocal<SimpleDateFormat> SDF_THREAD_LOCAL = new ThreadLocal<>();
 
@@ -231,7 +227,7 @@ public final class DynamicL {
             if (stackIndex >= stackTrace.length) {
                 StackTraceElement targetElement = stackTrace[3];
                 final String fileName = getFileName(targetElement);
-                if (CONFIG.mTagIsSpace && StringUtils.isSpace(tag)) {
+                if (CONFIG.mTagIsSpace && DynamicFile.INSTANCE.isSpace(tag)) {
                     int index = fileName.indexOf('.');// Use proguard may not find '.'.
                     tag = index == -1 ? fileName : fileName.substring(0, index);
                 }
@@ -239,7 +235,7 @@ public final class DynamicL {
             }
             StackTraceElement targetElement = stackTrace[stackIndex];
             final String fileName = getFileName(targetElement);
-            if (CONFIG.mTagIsSpace && StringUtils.isSpace(tag)) {
+            if (CONFIG.mTagIsSpace && DynamicFile.INSTANCE.isSpace(tag)) {
                 int index = fileName.indexOf('.');// Use proguard may not find '.'.
                 tag = index == -1 ? fileName : fileName.substring(0, index);
             }
@@ -505,11 +501,7 @@ public final class DynamicL {
         if (!createOrExistsDir(file.getParentFile())) return false;
         try {
             deleteDueLogs(filePath);
-            boolean isCreate = file.createNewFile();
-            if (isCreate) {
-                printDeviceInfo(filePath);
-            }
-            return isCreate;
+            return file.createNewFile();
         } catch (IOException e) {
             e.printStackTrace();
             return false;
@@ -550,33 +542,6 @@ public final class DynamicL {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-    }
-
-    private static void printDeviceInfo(final String filePath) {
-        String versionName = "";
-        int versionCode = 0;
-        try {
-            PackageInfo pi = UtilsApp.getApp()
-                    .getPackageManager()
-                    .getPackageInfo(UtilsApp.getApp().getPackageName(), 0);
-            if (pi != null) {
-                versionName = pi.versionName;
-                versionCode = pi.versionCode;
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        String time = filePath.substring(filePath.length() - 14, filePath.length() - 4);
-        final String head = "************* Log Head ****************" +
-                "\nDate of Log        : " + time +
-                "\nDevice Manufacturer: " + Build.MANUFACTURER +
-                "\nDevice Model       : " + Build.MODEL +
-                "\nAndroid Version    : " + Build.VERSION.RELEASE +
-                "\nAndroid SDK        : " + Build.VERSION.SDK_INT +
-                "\nApp VersionName    : " + versionName +
-                "\nApp VersionCode    : " + versionCode +
-                "\n************* Log Head ****************\n\n";
-        input2File(head, filePath);
     }
 
     private static boolean createOrExistsDir(final File file) {
@@ -625,13 +590,13 @@ public final class DynamicL {
         private int     mStackOffset       = 0;     // The stack's offset of log.
         private int     mSaveDays          = -1;    // The save days of log.
 
-        private Config() {
+        public Config(Application application) {
             if (mDefaultDir != null) return;
             if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())
-                    && UtilsApp.getApp().getExternalCacheDir() != null)
-                mDefaultDir = UtilsApp.getApp().getExternalCacheDir() + FILE_SEP + "log" + FILE_SEP;
+                    && application.getExternalCacheDir() != null)
+                mDefaultDir = application.getExternalCacheDir() + FILE_SEP + "log" + FILE_SEP;
             else {
-                mDefaultDir = UtilsApp.getApp().getCacheDir() + FILE_SEP + "log" + FILE_SEP;
+                mDefaultDir = application.getCacheDir() + FILE_SEP + "log" + FILE_SEP;
             }
         }
 
@@ -646,7 +611,7 @@ public final class DynamicL {
         }
 
         public Config setGlobalTag(final String tag) {
-            if (StringUtils.isSpace(tag)) {
+            if (DynamicFile.INSTANCE.isSpace(tag)) {
                 mGlobalTag = "";
                 mTagIsSpace = true;
             } else {
@@ -667,7 +632,7 @@ public final class DynamicL {
         }
 
         public Config setDir(final String dir) {
-            if (StringUtils.isSpace(dir)) {
+            if (DynamicFile.INSTANCE.isSpace(dir)) {
                 mDir = null;
             } else {
                 mDir = dir.endsWith(FILE_SEP) ? dir : dir + FILE_SEP;
@@ -681,7 +646,7 @@ public final class DynamicL {
         }
 
         public Config setFilePrefix(final String filePrefix) {
-            if (StringUtils.isSpace(filePrefix)) {
+            if (DynamicFile.INSTANCE.isSpace(filePrefix)) {
                 mFilePrefix = "util";
             } else {
                 mFilePrefix = filePrefix;

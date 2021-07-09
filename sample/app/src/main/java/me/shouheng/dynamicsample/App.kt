@@ -26,15 +26,13 @@ class App : Application() {
             application = this@App
             enabled = true
             allowLog = true
-            addResourceLoader(object : ResourcesLoader {
-                override fun target(): SourceType = object : SourceType {
-                    override fun typeName(): String = "custom"
-                }
+     /*       addResourceLoader(object : ResourcesLoader {
+                override fun target(): SourceType = SourceType.DEFAULT
 
                 override fun load(path: String, listener: ResourcesLoaderListener) {
                     // noop
                 }
-            }, true)
+            }, true)*/
         }
         registerExceptionHandler()
     }

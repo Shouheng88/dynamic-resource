@@ -1,9 +1,8 @@
 package me.shouheng.dynamic.utils;
 
+import android.content.Context;
 import android.os.Build;
 import android.os.Environment;
-
-import me.shouheng.utils.UtilsApp;
 
 /**
  * 用来对文件的路径进行处理，提供一些针对 Android 平台的路径获取等操作
@@ -46,11 +45,11 @@ public final class DynamicPath {
      *
      * @return the path of /data/data/package
      */
-    public static String getInternalAppDataPath() {
+    public static String getInternalAppDataPath(Context context) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-            return UtilsApp.getApp().getApplicationInfo().dataDir;
+            return context.getApplicationInfo().dataDir;
         }
-        return UtilsApp.getApp().getDataDir().getAbsolutePath();
+        return context.getDataDir().getAbsolutePath();
     }
 
     /**
@@ -58,11 +57,11 @@ public final class DynamicPath {
      *
      * @return the path of /data/data/package/code_cache
      */
-    public static String getInternalAppCodeCacheDir() {
+    public static String getInternalAppCodeCacheDir(Context context) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            return UtilsApp.getApp().getApplicationInfo().dataDir + "/code_cache";
+            return context.getApplicationInfo().dataDir + "/code_cache";
         }
-        return UtilsApp.getApp().getCodeCacheDir().getAbsolutePath();
+        return context.getCodeCacheDir().getAbsolutePath();
     }
 
     /**
@@ -70,8 +69,8 @@ public final class DynamicPath {
      *
      * @return the path of /data/data/package/cache
      */
-    public static String getInternalAppCachePath() {
-        return UtilsApp.getApp().getCacheDir().getAbsolutePath();
+    public static String getInternalAppCachePath(Context context) {
+        return context.getCacheDir().getAbsolutePath();
     }
 
     /**
@@ -79,8 +78,8 @@ public final class DynamicPath {
      *
      * @return the path of /data/data/package/databases
      */
-    public static String getInternalAppDbPath() {
-        return UtilsApp.getApp().getApplicationInfo().dataDir + "/databases";
+    public static String getInternalAppDbPath(Context context) {
+        return context.getApplicationInfo().dataDir + "/databases";
     }
 
     /**
@@ -89,8 +88,8 @@ public final class DynamicPath {
      * @param name The name of database.
      * @return the path of /data/data/package/databases/name
      */
-    public static String getInternalAppDbPath(String name) {
-        return UtilsApp.getApp().getDatabasePath(name).getAbsolutePath();
+    public static String getInternalAppDbPath(Context context, String name) {
+        return context.getDatabasePath(name).getAbsolutePath();
     }
 
     /**
@@ -98,8 +97,8 @@ public final class DynamicPath {
      *
      * @return the path of /data/data/package/files
      */
-    public static String getInternalAppFilesPath() {
-        return UtilsApp.getApp().getFilesDir().getAbsolutePath();
+    public static String getInternalAppFilesPath(Context context) {
+        return context.getFilesDir().getAbsolutePath();
     }
 
     /**
@@ -107,8 +106,8 @@ public final class DynamicPath {
      *
      * @return the path of /data/data/package/shared_prefs
      */
-    public static String getInternalAppSpPath() {
-        return UtilsApp.getApp().getApplicationInfo().dataDir + "shared_prefs";
+    public static String getInternalAppSpPath(Context context) {
+        return context.getApplicationInfo().dataDir + "shared_prefs";
     }
 
     /**
@@ -116,11 +115,11 @@ public final class DynamicPath {
      *
      * @return the path of /data/data/package/no_backup
      */
-    public static String getInternalAppNoBackupFilesPath() {
+    public static String getInternalAppNoBackupFilesPath(Context context) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            return UtilsApp.getApp().getApplicationInfo().dataDir + "no_backup";
+            return context.getApplicationInfo().dataDir + "no_backup";
         }
-        return UtilsApp.getApp().getNoBackupFilesDir().getAbsolutePath();
+        return context.getNoBackupFilesDir().getAbsolutePath();
     }
 
     /*--------------------------------- /storage/emulated/0 -------------------------------------*/
@@ -245,10 +244,10 @@ public final class DynamicPath {
      *
      * @return the path of /storage/emulated/0/Android/data/package
      */
-    public static String getExternalAppDataPath() {
+    public static String getExternalAppDataPath(Context context) {
         if (isExternalStorageDisable()) return "";
         // noinspection ConstantConditions
-        return UtilsApp.getApp().getExternalCacheDir().getParentFile().getAbsolutePath();
+        return context.getExternalCacheDir().getParentFile().getAbsolutePath();
     }
 
     /**
@@ -256,10 +255,10 @@ public final class DynamicPath {
      *
      * @return the path of /storage/emulated/0/Android/data/package/cache
      */
-    public static String getExternalAppCachePath() {
+    public static String getExternalAppCachePath(Context context) {
         if (isExternalStorageDisable()) return "";
         // noinspection ConstantConditions
-        return UtilsApp.getApp().getExternalCacheDir().getAbsolutePath();
+        return context.getExternalCacheDir().getAbsolutePath();
     }
 
     /**
@@ -267,10 +266,10 @@ public final class DynamicPath {
      *
      * @return the path of /storage/emulated/0/Android/data/package/files
      */
-    public static String getExternalAppFilesPath() {
+    public static String getExternalAppFilesPath(Context context) {
         if (isExternalStorageDisable()) return "";
         // noinspection ConstantConditions
-        return UtilsApp.getApp().getExternalFilesDir(null).getAbsolutePath();
+        return context.getExternalFilesDir(null).getAbsolutePath();
     }
 
     /**
@@ -278,10 +277,10 @@ public final class DynamicPath {
      *
      * @return the path of /storage/emulated/0/Android/data/package/files/Music
      */
-    public static String getExternalAppMusicPath() {
+    public static String getExternalAppMusicPath(Context context) {
         if (isExternalStorageDisable()) return "";
         // noinspection ConstantConditions
-        return UtilsApp.getApp().getExternalFilesDir(Environment.DIRECTORY_MUSIC).getAbsolutePath();
+        return context.getExternalFilesDir(Environment.DIRECTORY_MUSIC).getAbsolutePath();
     }
 
     /**
@@ -289,10 +288,10 @@ public final class DynamicPath {
      *
      * @return the path of /storage/emulated/0/Android/data/package/files/Podcasts
      */
-    public static String getExternalAppPodcastsPath() {
+    public static String getExternalAppPodcastsPath(Context context) {
         if (isExternalStorageDisable()) return "";
         // noinspection ConstantConditions
-        return UtilsApp.getApp().getExternalFilesDir(Environment.DIRECTORY_PODCASTS).getAbsolutePath();
+        return context.getExternalFilesDir(Environment.DIRECTORY_PODCASTS).getAbsolutePath();
     }
 
     /**
@@ -300,10 +299,10 @@ public final class DynamicPath {
      *
      * @return the path of /storage/emulated/0/Android/data/package/files/Ringtones
      */
-    public static String getExternalAppRingtonesPath() {
+    public static String getExternalAppRingtonesPath(Context context) {
         if (isExternalStorageDisable()) return "";
         // noinspection ConstantConditions
-        return UtilsApp.getApp().getExternalFilesDir(Environment.DIRECTORY_RINGTONES).getAbsolutePath();
+        return context.getExternalFilesDir(Environment.DIRECTORY_RINGTONES).getAbsolutePath();
     }
 
     /**
@@ -311,10 +310,10 @@ public final class DynamicPath {
      *
      * @return the path of /storage/emulated/0/Android/data/package/files/Alarms
      */
-    public static String getExternalAppAlarmsPath() {
+    public static String getExternalAppAlarmsPath(Context context) {
         if (isExternalStorageDisable()) return "";
         // noinspection ConstantConditions
-        return UtilsApp.getApp().getExternalFilesDir(Environment.DIRECTORY_ALARMS).getAbsolutePath();
+        return context.getExternalFilesDir(Environment.DIRECTORY_ALARMS).getAbsolutePath();
     }
 
     /**
@@ -322,10 +321,10 @@ public final class DynamicPath {
      *
      * @return the path of /storage/emulated/0/Android/data/package/files/Notifications
      */
-    public static String getExternalAppNotificationsPath() {
+    public static String getExternalAppNotificationsPath(Context context) {
         if (isExternalStorageDisable()) return "";
         // noinspection ConstantConditions
-        return UtilsApp.getApp().getExternalFilesDir(Environment.DIRECTORY_NOTIFICATIONS).getAbsolutePath();
+        return context.getExternalFilesDir(Environment.DIRECTORY_NOTIFICATIONS).getAbsolutePath();
     }
 
     /**
@@ -333,10 +332,10 @@ public final class DynamicPath {
      *
      * @return path of /storage/emulated/0/Android/data/package/files/Pictures
      */
-    public static String getExternalAppPicturesPath() {
+    public static String getExternalAppPicturesPath(Context context) {
         if (isExternalStorageDisable()) return "";
         // noinspection ConstantConditions
-        return UtilsApp.getApp().getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath();
+        return context.getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath();
     }
 
     /**
@@ -344,10 +343,10 @@ public final class DynamicPath {
      *
      * @return the path of /storage/emulated/0/Android/data/package/files/Movies
      */
-    public static String getExternalAppMoviesPath() {
+    public static String getExternalAppMoviesPath(Context context) {
         if (isExternalStorageDisable()) return "";
         // noinspection ConstantConditions
-        return UtilsApp.getApp().getExternalFilesDir(Environment.DIRECTORY_MOVIES).getAbsolutePath();
+        return context.getExternalFilesDir(Environment.DIRECTORY_MOVIES).getAbsolutePath();
     }
 
     /**
@@ -355,10 +354,10 @@ public final class DynamicPath {
      *
      * @return the path of /storage/emulated/0/Android/data/package/files/Download
      */
-    public static String getExternalAppDownloadPath() {
+    public static String getExternalAppDownloadPath(Context context) {
         if (isExternalStorageDisable()) return "";
         // noinspection ConstantConditions
-        return UtilsApp.getApp().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
+        return context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
     }
 
     /**
@@ -366,10 +365,10 @@ public final class DynamicPath {
      *
      * @return the path of /storage/emulated/0/Android/data/package/files/DCIM
      */
-    public static String getExternalAppDcimPath() {
+    public static String getExternalAppDcimPath(Context context) {
         if (isExternalStorageDisable()) return "";
         // noinspection ConstantConditions
-        return UtilsApp.getApp().getExternalFilesDir(Environment.DIRECTORY_DCIM).getAbsolutePath();
+        return context.getExternalFilesDir(Environment.DIRECTORY_DCIM).getAbsolutePath();
     }
 
     /**
@@ -377,14 +376,14 @@ public final class DynamicPath {
      *
      * @return the path of /storage/emulated/0/Android/data/package/files/Documents
      */
-    public static String getExternalAppDocumentsPath() {
+    public static String getExternalAppDocumentsPath(Context context) {
         if (isExternalStorageDisable()) return "";
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             // noinspection ConstantConditions
-            return UtilsApp.getApp().getExternalFilesDir(null).getAbsolutePath() + "/Documents";
+            return context.getExternalFilesDir(null).getAbsolutePath() + "/Documents";
         }
         // noinspection ConstantConditions
-        return UtilsApp.getApp().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath();
+        return context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath();
     }
 
     /*------------------------ /storage/emulated/0/Android/obb/package --------------------------*/
@@ -394,9 +393,9 @@ public final class DynamicPath {
      *
      * @return the path of /storage/emulated/0/Android/obb/package
      */
-    public static String getExternalAppObbPath() {
+    public static String getExternalAppObbPath(Context context) {
         if (isExternalStorageDisable()) return "";
-        return UtilsApp.getApp().getObbDir().getAbsolutePath();
+        return context.getObbDir().getAbsolutePath();
     }
 
     /*------------------------------------ inner methods ----------------------------------------*/

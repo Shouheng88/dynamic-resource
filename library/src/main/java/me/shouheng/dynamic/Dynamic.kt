@@ -70,6 +70,7 @@ class Dynamic private constructor() {
         executor: Executor? = null
     ) {
         this.application = application
+        DynamicL.CONFIG = DynamicL.Config(application)
         this.enabled = enabled
         this.executor = executor ?: this.executor
         dynamicActivityLifecycleCallbacks = DynamicActivityLifecycleCallbacks(this)
