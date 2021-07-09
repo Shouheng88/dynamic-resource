@@ -1,15 +1,14 @@
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-apply plugin: 'maven-publish'
-apply plugin: 'signing'
+apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     defaultConfig {
+        applicationId "me.shouheng.resources"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -17,9 +16,15 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        applicationVariants.all { variant ->
+            variant.outputs.all { output ->
+                outputFileName = "assets.resc"
+            }
+        }
     }
     android {
         lintOptions {
+            checkReleaseBuilds false
             abortOnError false
         }
     }
@@ -135,4 +140,6 @@ task androidSourcesJar(type: Jar) {
 
 signing {
     sign publishing.publications
+    compileOnly "com.android.support:appcompat-v7:$supportLibVersion"
+    compileOnly "com.android.support:design:$supportLibVersion"
 }

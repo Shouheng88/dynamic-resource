@@ -5,6 +5,7 @@
     <string name="previous">Previous</string>
     <string name="load_default">Load default</string>
     <string name="load_another">Load another</string>
+    <string name="load_assets">Load assets</string>
 
     <string name="fab_click_action">Action</string>
     <string name="fab_click_message">Replace with your own action</string>

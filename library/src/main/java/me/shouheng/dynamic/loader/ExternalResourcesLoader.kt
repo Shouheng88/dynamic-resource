@@ -9,7 +9,7 @@ import me.shouheng.dynamic.resources.ExternalResources
 import java.io.File
 
 /** External resources loader. */
-class ExternalResourcesLoader(
+open class ExternalResourcesLoader(
     private val context: Context
 ) : ResourcesLoader {
 

@@ -141,21 +141,21 @@ class DynamicResources(
         return result
     }
 
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    override fun getDrawableForDensity(id: Int, density: Int, theme: Theme?): Drawable? {
-        var result = super.getDrawableForDensity(id, density, theme)
-        if (resources == null || !dynamic.enabled) return result
-        try {
-            val typeName = super.getResourceTypeName(id)
-            val entryName = super.getResourceEntryName(id)
-            val resId = resources!!.getIdentifier(entryName, typeName)
-            if (resId == 0) return result
-            result = resources!!.getDrawableForDensity(resId, density, theme)
-        } catch (e: NotFoundException) {
-            e.printStackTrace()
-        }
-        return result
-    }
+//    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+//    override fun getDrawableForDensity(id: Int, density: Int, theme: Theme?): Drawable? {
+//        var result = super.getDrawableForDensity(id, density, theme)
+//        if (resources == null || !dynamic.enabled) return result
+//        try {
+//            val typeName = super.getResourceTypeName(id)
+//            val entryName = super.getResourceEntryName(id)
+//            val resId = resources!!.getIdentifier(entryName, typeName)
+//            if (resId == 0) return result
+//            result = resources!!.getDrawableForDensity(resId, density, theme)
+//        } catch (e: NotFoundException) {
+//            e.printStackTrace()
+//        }
+//        return result
+//    }
 
     override fun getDimensionPixelSize(id: Int): Int {
         var result = super.getDimensionPixelSize(id)
@@ -277,20 +277,20 @@ class DynamicResources(
         return result
     }
 
-    override fun getColorStateList(id: Int, theme: Theme?): ColorStateList {
-        var result = super.getColorStateList(id, theme)
-        if (resources == null || !dynamic.enabled) return result
-        try {
-            val typeName = super.getResourceTypeName(id)
-            val entryName = super.getResourceEntryName(id)
-            val resId = resources!!.getIdentifier(entryName, typeName)
-            if (resId == 0) return result
-            result = resources!!.getColorStateList(resId, theme)
-        } catch (e: NotFoundException) {
-            e.printStackTrace()
-        }
-        return result
-    }
+//    override fun getColorStateList(id: Int, theme: Theme?): ColorStateList {
+//        var result = super.getColorStateList(id, theme)
+//        if (resources == null || !dynamic.enabled) return result
+//        try {
+//            val typeName = super.getResourceTypeName(id)
+//            val entryName = super.getResourceEntryName(id)
+//            val resId = resources!!.getIdentifier(entryName, typeName)
+//            if (resId == 0) return result
+//            result = resources!!.getColorStateList(resId, theme)
+//        } catch (e: NotFoundException) {
+//            e.printStackTrace()
+//        }
+//        return result
+//    }
 
     override fun getBoolean(id: Int): Boolean {
         var result = super.getBoolean(id)
@@ -337,21 +337,22 @@ class DynamicResources(
         return result
     }
 
-    override fun getColor(id: Int, theme: Theme?): Int {
-        var result = super.getColor(id, theme)
-        if (resources == null || !dynamic.enabled)
-            return result
-        try {
-            val typeName = super.getResourceTypeName(id)
-            val entryName = super.getResourceEntryName(id)
-            val resId = resources!!.getIdentifier(entryName, typeName)
-            if (resId == 0) return result
-            result = resources!!.getColor(resId, theme)
-        } catch (e: NotFoundException) {
-            e.printStackTrace()
-        }
-        return result
-    }
+    // TODO test the dynamic effect for method with theme, xml, layout etc.
+//    override fun getColor(id: Int, theme: Theme?): Int {
+//        var result = super.getColor(id, theme)
+//        if (resources == null || !dynamic.enabled)
+//            return result
+//        try {
+//            val typeName = super.getResourceTypeName(id)
+//            val entryName = super.getResourceEntryName(id)
+//            val resId = resources!!.getIdentifier(entryName, typeName)
+//            if (resId == 0) return result
+//            result = resources!!.getColor(resId, theme)
+//        } catch (e: NotFoundException) {
+//            e.printStackTrace()
+//        }
+//        return result
+//    }
 
     override fun openRawResource(id: Int): InputStream {
         var result = super.openRawResource(id)
@@ -415,35 +416,35 @@ class DynamicResources(
         return result
     }
 
-    override fun getDrawable(id: Int, theme: Theme?): Drawable {
-        var result = super.getDrawable(id, theme)
-        if (resources == null || !dynamic.enabled) return result
-        try {
-            val typeName = super.getResourceTypeName(id)
-            val entryName = super.getResourceEntryName(id)
-            val resId = resources!!.getIdentifier(entryName, typeName)
-            if (resId == 0) return result
-            result = resources!!.getDrawable(resId, theme)
-        } catch (e: NotFoundException) {
-            e.printStackTrace()
-        }
-        return result
-    }
+//    override fun getDrawable(id: Int, theme: Theme?): Drawable {
+//        var result = super.getDrawable(id, theme)
+//        if (resources == null || !dynamic.enabled) return result
+//        try {
+//            val typeName = super.getResourceTypeName(id)
+//            val entryName = super.getResourceEntryName(id)
+//            val resId = resources!!.getIdentifier(entryName, typeName)
+//            if (resId == 0) return result
+//            result = resources!!.getDrawable(resId, theme)
+//        } catch (e: NotFoundException) {
+//            e.printStackTrace()
+//        }
+//        return result
+//    }
 
-    override fun getLayout(id: Int): XmlResourceParser {
-        var result = super.getLayout(id)
-        if (resources == null || !dynamic.enabled) return result
-        try {
-            val typeName = super.getResourceTypeName(id)
-            val entryName = super.getResourceEntryName(id)
-            val resId = resources!!.getIdentifier(entryName, typeName)
-            if (resId == 0) return result
-            result = resources!!.getLayout(resId)
-        } catch (e: NotFoundException) {
-            e.printStackTrace()
-        }
-        return result
-    }
+//    override fun getLayout(id: Int): XmlResourceParser {
+//        var result = super.getLayout(id)
+//        if (resources == null || !dynamic.enabled) return result
+//        try {
+//            val typeName = super.getResourceTypeName(id)
+//            val entryName = super.getResourceEntryName(id)
+//            val resId = resources!!.getIdentifier(entryName, typeName)
+//            if (resId == 0) return result
+//            result = resources!!.getLayout(resId)
+//        } catch (e: NotFoundException) {
+//            e.printStackTrace()
+//        }
+//        return result
+//    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun getFont(id: Int): Typeface {

@@ -11,6 +11,7 @@ import me.shouheng.dynamic.resources.IResources
 import me.shouheng.dynamic.resources.WeakDynamicResourcesAware
 import me.shouheng.dynamic.store.DefaultSourceTypeStore
 import me.shouheng.dynamic.store.ISourceTypeStore
+import me.shouheng.dynamic.utils.DynamicL
 import java.lang.ref.ReferenceQueue
 import java.util.concurrent.*
 import java.util.concurrent.atomic.AtomicInteger
@@ -78,7 +79,7 @@ class Dynamic private constructor() {
         }
         listOf(
             ExternalResourcesLoader(application),
-            AssetsResourcesLoader(),
+            AssetsResourcesLoader(application),
             DefaultResourcesLoader(application),
             ResourcesResourcesLoader(application)
         ).forEach { loaders[it.target()] = it }
@@ -207,6 +208,9 @@ class Dynamic private constructor() {
         /** The executor to load, move resources package and run background tasks. */
         var executor: Executor? = null
 
+        /** Is log allowed. */
+        var allowLog: Boolean = false
+
         /**
          * Add one resources loader.
          *
@@ -229,6 +233,7 @@ class Dynamic private constructor() {
                 this@Builder.loaders.forEach {
                     addResourceLoader(it.first, it.second)
                 }
+                DynamicL.getConfig().setLogSwitch(allowLog)
             }
         }
     }
