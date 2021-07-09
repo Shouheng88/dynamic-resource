@@ -11,8 +11,8 @@ interface ResourcesLoader {
     /**
      * Start to load resources.
      *
-     * - [path]      path of resources to load.
-     * - [listener] load progress callback.
+     * @param path path of resources to load.
+     * @param listener load progress callback.
      */
     fun load(
         path: String,

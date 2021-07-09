@@ -10,7 +10,6 @@ import android.os.Build
 import android.support.annotation.RequiresApi
 import android.util.TypedValue
 import me.shouheng.dynamic.Dynamic
-import me.shouheng.dynamic.loader.Source
 import me.shouheng.dynamic.loader.SourceType
 import me.shouheng.dynamic.resources.DynamicResourcesAware
 import me.shouheng.dynamic.resources.IResources
@@ -478,7 +477,7 @@ class DynamicResources(
     }
 
     override fun onResourcesChanged(resources: IResources, sourceType: SourceType) {
-        if (sourceType != Source.DEFAULT) {
+        if (sourceType != SourceType.DEFAULT) {
             this.resources = resources
         } else {
             this.resources = null

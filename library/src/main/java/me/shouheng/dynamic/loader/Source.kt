@@ -1,10 +1,7 @@
 package me.shouheng.dynamic.loader
 
-/** The source type. */
-interface SourceType
-
 /** Source enums for dynamic resources. */
-enum class Source : SourceType {
+enum class SourceType {
     /** Resource of default. */
     DEFAULT,
 

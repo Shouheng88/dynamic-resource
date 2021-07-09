@@ -9,8 +9,11 @@ import me.shouheng.dynamic.loader.*
 import me.shouheng.dynamic.resources.DynamicResourcesAware
 import me.shouheng.dynamic.resources.IResources
 import me.shouheng.dynamic.resources.WeakDynamicResourcesAware
-import me.shouheng.utils.UtilsApp
+import me.shouheng.dynamic.store.DefaultSourceTypeStore
+import me.shouheng.dynamic.store.ISourceTypeStore
 import java.lang.ref.ReferenceQueue
+import java.util.concurrent.*
+import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.locks.ReentrantReadWriteLock
 
 @DslMarker
@@ -27,17 +30,34 @@ class Dynamic private constructor() {
     private lateinit var application: Application
     private var dynamicActivityLifecycleCallbacks: DynamicActivityLifecycleCallbacks? = null
     private var appDynamicContext: DynamicContext? = null
-    private var currentSourceType: SourceType = Source.DEFAULT
+    private var currentSourceType: SourceType = SourceType.DEFAULT
     private var currentSourcePath: String = ""
-    internal var currentResources: IResources? = null
+    private var poolWorkQueue = LinkedBlockingQueue<Runnable>(128)
+    private val threadFactory: ThreadFactory = object : ThreadFactory {
+
+        private val count = AtomicInteger(1)
+
+        override fun newThread(r: Runnable): Thread {
+            return Thread(r, "Dynamic #" + count.getAndIncrement())
+        }
+    }
+    private var sourceTypeStore: ISourceTypeStore? = null
+
     private val readWriteLock = ReentrantReadWriteLock()
 
     private val loaders = mutableMapOf<SourceType, ResourcesLoader>()
 
     private val dynamicResourcesChangeAwareList = mutableListOf<WeakDynamicResourcesAware>()
-    private val dynamicResourcesReferenceQueue = ReferenceQueue<DynamicResourcesAware>()
+    private val dynamicResourcesChangeAwareReferenceQueue = ReferenceQueue<DynamicResourcesAware>()
 
-    private val defaultLoaders = mutableListOf<ResourcesLoader>()
+    internal var executor: Executor
+    internal var currentResources: IResources? = null
+
+    init {
+        this.executor = ThreadPoolExecutor(
+            CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE_SECONDS, TimeUnit.SECONDS,
+            poolWorkQueue, threadFactory)
+    }
 
     /** If enable the dynamic manager globally. */
     var enabled: Boolean = true
@@ -45,21 +65,25 @@ class Dynamic private constructor() {
 
     internal fun init(
         application: Application,
-        enabled: Boolean
+        enabled: Boolean,
+        executor: Executor? = null
     ) {
         this.application = application
         this.enabled = enabled
-        UtilsApp.init(application)
+        this.executor = executor ?: this.executor
         dynamicActivityLifecycleCallbacks = DynamicActivityLifecycleCallbacks(this)
         application.registerActivityLifecycleCallbacks(dynamicActivityLifecycleCallbacks)
         if (enabled) {
             hookApplicationContext(application)
         }
-        defaultLoaders.add(ExternalResourcesLoader(application))
-        defaultLoaders.add(AssetsResourcesLoader())
-        defaultLoaders.add(DefaultResourcesLoader(application))
-        defaultLoaders.add(ResourcesResourcesLoader(application))
-        defaultLoaders.forEach { loaders[it.target()] = it }
+        listOf(
+            ExternalResourcesLoader(application),
+            AssetsResourcesLoader(),
+            DefaultResourcesLoader(application),
+            ResourcesResourcesLoader(application)
+        ).forEach { loaders[it.target()] = it }
+        val store = sourceTypeStore?:DefaultSourceTypeStore(application)
+        load(store.getSourcePath(), store.getSourceType(), null)
     }
 
     /**
@@ -77,6 +101,8 @@ class Dynamic private constructor() {
         if (!checkShouldReload(path, source)) return
         currentSourcePath = path
         currentSourceType = source
+        sourceTypeStore?.saveSourceType(currentSourceType)
+        sourceTypeStore?.saveSourcePath(currentSourcePath)
         loaders[source]?.load(
             path,
             object : ResourcesLoaderListener {
@@ -109,7 +135,7 @@ class Dynamic private constructor() {
             dynamicResourcesChangeAwareList.add(WeakDynamicResourcesAware(
                 aware.name()?:aware.javaClass.name,
                 aware,
-                dynamicResourcesReferenceQueue
+                dynamicResourcesChangeAwareReferenceQueue
             ))
         }
         readWriteLock.writeLock().unlock()
@@ -131,10 +157,10 @@ class Dynamic private constructor() {
     /** Clear none existed dynamic resources. */
     internal fun clearResourcesNoneExist() {
         readWriteLock.writeLock().lock()
-        var removed = dynamicResourcesReferenceQueue.poll()
+        var removed = dynamicResourcesChangeAwareReferenceQueue.poll()
         while (removed != null && removed.get() == null) {
             dynamicResourcesChangeAwareList.remove(removed)
-            removed = dynamicResourcesReferenceQueue.poll()
+            removed = dynamicResourcesChangeAwareReferenceQueue.poll()
         }
         readWriteLock.writeLock().unlock()
     }
@@ -178,6 +204,9 @@ class Dynamic private constructor() {
         /** If enable the dynamic manager globally. */
         var enabled: Boolean = true
 
+        /** The executor to load, move resources package and run background tasks. */
+        var executor: Executor? = null
+
         /**
          * Add one resources loader.
          *
@@ -194,7 +223,8 @@ class Dynamic private constructor() {
                 checkNotNull(this@Builder.application) { "The field application is required!" }
                 init(
                     this@Builder.application!!,
-                    this@Builder.enabled
+                    this@Builder.enabled,
+                    this@Builder.executor
                 )
                 this@Builder.loaders.forEach {
                     addResourceLoader(it.first, it.second)
@@ -204,6 +234,11 @@ class Dynamic private constructor() {
     }
 
     companion object {
+        private val CPU_COUNT = Runtime.getRuntime().availableProcessors()
+        private val CORE_POOL_SIZE = 2.coerceAtLeast((CPU_COUNT - 1).coerceAtMost(4))
+        private val MAXIMUM_POOL_SIZE = CPU_COUNT * 2 + 1
+        private const val KEEP_ALIVE_SECONDS = 30L
+
         /** The singleton dynamic instance. */
         private val dynamic = Dynamic()
 

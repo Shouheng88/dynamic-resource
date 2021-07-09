@@ -20,7 +20,9 @@ class App : Application() {
             application = this@App
             enabled = true
             addResourceLoader(object : ResourcesLoader {
-                override fun target(): SourceType = object : SourceType {}
+                override fun target(): SourceType = object : SourceType {
+                    override fun typeName(): String = "custom"
+                }
 
                 override fun load(path: String, listener: ResourcesLoaderListener) {
                     // noop

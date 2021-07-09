@@ -3,18 +3,25 @@ package me.shouheng.dynamic.hook
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle
+import android.support.v4.app.FragmentActivity
 import android.support.v7.app.AppCompatActivity
 import me.shouheng.dynamic.Dynamic
-import java.lang.ref.ReferenceQueue
-import java.lang.ref.WeakReference
+import me.shouheng.dynamic.resources.ActivityDynamicResourcesAware
+import me.shouheng.dynamic.resources.DynamicResourcesAwareActivity
+import me.shouheng.dynamic.resources.FragmentDynamicResourcesAware
 
 /** The dynamic activity life cycle callbacks. */
-class DynamicActivityLifecycleCallbacks(
+internal class DynamicActivityLifecycleCallbacks(
     private val dynamic: Dynamic
 ) : Application.ActivityLifecycleCallbacks {
 
-    private val dynamicResourcesList = mutableListOf<KeyWeakDynamicResources>()
-    private val referenceQueue = ReferenceQueue<DynamicResources>()
+    private val activityDynamicResourcesAware = ActivityDynamicResourcesAware()
+    private val fragmentDynamicResourcesAware = FragmentDynamicResourcesAware()
+
+    init {
+        dynamic.registerDynamicResourcesChangeAware(activityDynamicResourcesAware)
+        dynamic.registerDynamicResourcesChangeAware(fragmentDynamicResourcesAware)
+    }
 
     override fun onActivityCreated(activity: Activity?, savedInstanceState: Bundle?) {
         if (isDynamicEnabled()
@@ -34,25 +41,24 @@ class DynamicActivityLifecycleCallbacks(
     override fun onActivityStopped(activity: Activity?) { /*noop*/ }
 
     override fun onActivityDestroyed(activity: Activity?) {
-        removeResourcesNoneExist()
         dynamic.clearResourcesNoneExist()
+        if (activity is DynamicResourcesAwareActivity) {
+            activityDynamicResourcesAware.removeDynamicResourcesAwareActivity(activity)
+        }
     }
 
     override fun onActivitySaveInstanceState(activity: Activity?, outState: Bundle?) { /*noop*/ }
 
     /** Hook the context of activity. */
     private fun hookActivityContext(activity: Activity) {
-        DynamicContextHooker.hook(activity, dynamic)?.let {
-            dynamicResourcesList.add(KeyWeakDynamicResources(
-                activity.javaClass.name, it, referenceQueue))
+        DynamicContextHooker.hook(activity, dynamic)
+        if (activity is DynamicResourcesAwareActivity) {
+            activityDynamicResourcesAware.addDynamicResourcesAwareActivity(activity)
         }
-    }
-
-    private fun removeResourcesNoneExist() {
-        var removed = referenceQueue.poll()
-        while (removed != null && removed.get() == null) {
-            dynamicResourcesList.remove(removed)
-            removed = referenceQueue.poll()
+        if (activity is FragmentActivity) {
+            activity.supportFragmentManager.registerFragmentLifecycleCallbacks(
+                DynamicFragmentLifecycleCallbacks(fragmentDynamicResourcesAware), true
+            )
         }
     }
 
@@ -90,15 +96,4 @@ class DynamicActivityLifecycleCallbacks(
 
     /** Is dynamic manager enabled. */
     private fun isDynamicEnabled(): Boolean = dynamic.enabled
-}
-
-/** Key weak dynamic resources. */
-class KeyWeakDynamicResources(
-    private val target: String,
-    referent: DynamicResources?,
-    q: ReferenceQueue<in DynamicResources>?
-) : WeakReference<DynamicResources>(referent, q) {
-    override fun toString(): String {
-        return "[$target]" + super.toString()
-    }
 }

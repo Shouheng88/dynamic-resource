@@ -8,7 +8,7 @@ class ResourcesResourcesLoader(
     private val context: Context
 ) : ResourcesLoader {
 
-    override fun target(): SourceType = Source.RESOURCES
+    override fun target(): SourceType = SourceType.RESOURCES
 
     override fun load(path: String, listener: ResourcesLoaderListener) {
         listener.onStart()

@@ -8,7 +8,7 @@ class DefaultResourcesLoader(
     private val context: Context
 ) : ResourcesLoader {
 
-    override fun target(): SourceType = Source.DEFAULT
+    override fun target(): SourceType = SourceType.DEFAULT
 
     override fun load(
         path: String,

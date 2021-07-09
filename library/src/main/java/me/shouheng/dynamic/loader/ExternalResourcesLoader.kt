@@ -13,7 +13,7 @@ class ExternalResourcesLoader(
     private val context: Context
 ) : ResourcesLoader {
 
-    override fun target(): SourceType = Source.EXTERNAL
+    override fun target(): SourceType = SourceType.EXTERNAL
 
     override fun load(
         path: String,
