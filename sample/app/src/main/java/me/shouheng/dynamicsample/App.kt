@@ -4,6 +4,7 @@ import android.app.Application
 import android.view.InflateException
 import me.shouheng.dynamic.Dynamic
 import me.shouheng.dynamic.dynamic
+import me.shouheng.dynamicsample.dynamic.DynamicResourcesAwareActivityAdapterFactoryForContainerActivity
 import me.shouheng.uix.widget.button.NormalButton
 import me.shouheng.utils.ktx.colorOf
 import me.shouheng.vmlib.VMLib
@@ -20,13 +21,9 @@ class App : Application() {
             application = this@App
             enabled = true
             allowLog = true
-     /*       addResourceLoader(object : ResourcesLoader {
-                override fun target(): SourceType = SourceType.DEFAULT
-
-                override fun load(path: String, listener: ResourcesLoaderListener) {
-                    // noop
-                }
-            }, true)*/
+            registerDynamicResourcesAwareActivityAdapterFactory(
+                DynamicResourcesAwareActivityAdapterFactoryForContainerActivity()
+            )
         }
         registerExceptionHandler()
         customUIX()

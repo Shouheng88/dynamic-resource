@@ -1,5 +1,6 @@
 package me.shouheng.dynamic
 
+import android.app.Activity
 import android.app.Application
 import me.shouheng.dynamic.Dynamic.Companion.dynamic
 import me.shouheng.dynamic.hook.DynamicActivityLifecycleCallbacks
@@ -7,6 +8,7 @@ import me.shouheng.dynamic.hook.DynamicContext
 import me.shouheng.dynamic.hook.DynamicContextHooker
 import me.shouheng.dynamic.loader.*
 import me.shouheng.dynamic.resources.DynamicResourcesAware
+import me.shouheng.dynamic.resources.DynamicResourcesAwareActivityAdapterFactory
 import me.shouheng.dynamic.resources.IResources
 import me.shouheng.dynamic.resources.WeakDynamicResourcesAware
 import me.shouheng.dynamic.store.DefaultSourceTypeStore
@@ -47,6 +49,9 @@ class Dynamic private constructor() {
     private val readWriteLock = ReentrantReadWriteLock()
 
     private val loaders = mutableMapOf<SourceType, ResourcesLoader>()
+
+    internal val dynamicResourcesAwareActivityAdapterFactories
+            = mutableListOf<DynamicResourcesAwareActivityAdapterFactory<out Activity>>()
 
     private val dynamicResourcesChangeAwareList = mutableListOf<WeakDynamicResourcesAware>()
     private val dynamicResourcesChangeAwareReferenceQueue = ReferenceQueue<DynamicResourcesAware>()
@@ -200,10 +205,20 @@ class Dynamic private constructor() {
         loaders[type] = loader
     }
 
+    private fun registerDynamicResourcesAwareActivityAdapterFactory(
+        factory: DynamicResourcesAwareActivityAdapterFactory<out Activity>
+    ) {
+        dynamicResourcesAwareActivityAdapterFactories.add(factory)
+    }
+
     @DynamicResourcesDSL
     class Builder {
         /** Resources loaders. */
         private val loaders = mutableListOf<Pair<ResourcesLoader, Boolean>>()
+
+        /** Dynamic resources aware activity adapter factories. */
+        private val dynamicResourcesAwareActivityAdapterFactories
+                = mutableListOf<DynamicResourcesAwareActivityAdapterFactory<out Activity>>()
 
         /** Required! The application to which the dynamic manager applied. */
         var application: Application? = null
@@ -231,9 +246,23 @@ class Dynamic private constructor() {
             loaders.add(Pair(loader, replace))
         }
 
+        /**
+         * Register [DynamicResourcesAwareActivityAdapterFactory]
+         *
+         * @param factory the factory
+         */
+        fun registerDynamicResourcesAwareActivityAdapterFactory(
+            factory: DynamicResourcesAwareActivityAdapterFactory<out Activity>
+        ) {
+            dynamicResourcesAwareActivityAdapterFactories.add(factory)
+        }
+
         fun build(): Dynamic {
             return dynamic.apply {
                 checkNotNull(this@Builder.application) { "The field application is required!" }
+                this@Builder.dynamicResourcesAwareActivityAdapterFactories.forEach {
+                    registerDynamicResourcesAwareActivityAdapterFactory(it)
+                }
                 init(
                     this@Builder.application!!,
                     this@Builder.enabled,
