@@ -1,4 +1,4 @@
-package me.shouheng.dynamicsample.activity
+package me.shouheng.dynamicsample.base
 
 import android.viewbinding.ViewBinding
 import me.shouheng.dynamic.annotation.DynamicResources

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="cold_theme_accent">#05cc65</color>
+    <color name="cold_theme_primary">#05cc65</color>
+    <color name="cold_theme_primary_dark">#05AD56</color>
+    <color name="cold_theme_divider">#f4f4f4</color>
+    <color name="cold_theme_background">#fbfbfb</color>
+    <color name="cold_theme_foreground">#FFFFFF</color>
+
+    <color name="secondly_button_color">#303F9F</color>
+</resources>

@@ -14,6 +14,7 @@
         android:theme="@style/AppTheme"
         tools:overrideLibrary="me.shouheng.uix"
         tools:replace="android:allowBackup">
+        <!-- TODO label 是怎么解析的？ -->
         <activity
             android:name="me.shouheng.dynamicsample.activity.MainActivity"
             android:label="@string/title_activity_main"

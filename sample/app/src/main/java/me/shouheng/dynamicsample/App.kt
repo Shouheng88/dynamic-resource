@@ -4,6 +4,8 @@ import android.app.Application
 import android.view.InflateException
 import me.shouheng.dynamic.Dynamic
 import me.shouheng.dynamic.dynamic
+import me.shouheng.uix.widget.button.NormalButton
+import me.shouheng.utils.ktx.colorOf
 import me.shouheng.vmlib.VMLib
 
 /** The Application for sample. */
@@ -27,6 +29,7 @@ class App : Application() {
             }, true)*/
         }
         registerExceptionHandler()
+        customUIX()
     }
 
     private fun registerExceptionHandler() {
@@ -37,6 +40,10 @@ class App : Application() {
                 it.cause?.printStackTrace()
             }
         }
+    }
+
+    private fun customUIX() {
+        NormalButton.GlobalConfig.normalColor = colorOf(R.color.cold_theme_accent)
     }
 
     companion object {

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingStart="@dimen/page_margin_left"
+    android:paddingEnd="@dimen/page_margin_right"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragment.MainFragment">
+
+    <me.shouheng.uix.widget.button.NormalButton
+        android:id="@+id/button_next"
+        style="@style/NormalButtonStyle"
+        app:btn_normal_color="@color/secondly_button_color"
+        android:text="@string/next" />
+
+    <me.shouheng.uix.widget.button.NormalButton
+        android:id="@+id/btn_load_default"
+        android:text="@string/load_default"
+        style="@style/LoadButtonStyle"/>
+
+    <me.shouheng.uix.widget.button.NormalButton
+        android:id="@+id/btn_load_night"
+        android:text="@string/load_another"
+        style="@style/LoadButtonStyle"/>
+
+    <me.shouheng.uix.widget.button.NormalButton
+        android:id="@+id/btn_load_assets"
+        android:text="@string/load_assets"
+        style="@style/LoadButtonStyle"/>
+
+</LinearLayout>

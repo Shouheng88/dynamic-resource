@@ -13,7 +13,7 @@ class SampleService : DynamicResourcesService() {
 
     override fun onCreate() {
         super.onCreate()
-        toast(getString(R.string.hello_from_service))
+        toast(getString(R.string.second_hello_from_service))
         stopSelf()
     }
 }

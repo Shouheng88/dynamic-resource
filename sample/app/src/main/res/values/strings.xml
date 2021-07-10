@@ -1,19 +1,25 @@
 <resources>
     <string name="app_name">Dynamic Resources</string>
     <string name="title_activity_main">MainActivity</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
-    <string name="load_default">Load default</string>
-    <string name="load_another">Load another</string>
-    <string name="load_assets">Load assets</string>
+    <string name="next">Next page</string>
 
-    <string name="fab_click_action">Action</string>
-    <string name="fab_click_message">Replace with your own action</string>
+    <string name="load_default">Load default resources</string>
+    <string name="load_another">Load night resources</string>
+    <string name="load_assets">Load assets resources</string>
 
-    <string name="say_hello">Say hello!</string>
-    <string name="start_service">Start service</string>
-    <string name="hello_first_fragment">Hello from first fragment.</string>
-    <string name="hello_second_fragment">Hello from second fragment.</string>
+    <string name="send_action">Send</string>
+    <string name="send_message">Send me the by email shouheng2015@gmail.com</string>
 
-    <string name="hello_from_service">Hello from sample service.</string>
+    <string name="menu_main_feedback">Feedback</string>
+
+    <string name="second_say_hello">Say hello!</string>
+    <string name="second_start_service">Start service</string>
+    <string name="second_hello_content">Greeting from second fragment.</string>
+    <string name="second_hello_from_service">Greeting from service.</string>
+    <string name="second_show_edit_dialog">Show list dialog</string>
+    <string name="second_sample_list_title">Sample list dialog</string>
+    <string name="second_sample_list_content_1">To be both a speaker of words and a doer of deeds.</string>
+    <string name="second_sample_list_content_2">Bad times make a good man.</string>
+    <string name="second_sample_list_content_3">Variety is the spice of life.</string>
+    <string name="second_sample_list_content_4">The greatest test of courage on earth is to bear defeat without losing heart.</string>
 </resources>

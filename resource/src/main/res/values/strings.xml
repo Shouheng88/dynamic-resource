@@ -1,18 +1,25 @@
 <resources>
-    <string name="app_name">DYNAMIC RESOURCES</string>
-    <string name="title_activity_main">MAINACTIVITY</string>
-    <string name="next">NEXT</string>
-    <string name="previous">PREVIOUS</string>
-    <string name="load_default">LOAD DEFAULT</string>
-    <string name="load_another">LOAD ANOTHER</string>
+    <string name="app_name">动态资源</string>
+    <string name="title_activity_main">主 Activity</string>
+    <string name="next">下个页面</string>
 
-    <string name="fab_click_action">ACTION</string>
-    <string name="fab_click_message">REPLACE WITH YOUR OWN ACTION</string>
+    <string name="load_default">加载默认资源</string>
+    <string name="load_another">加载 night 资源</string>
+    <string name="load_assets">加载 assets 资源</string>
 
-    <string name="say_hello">SAY HELLO!</string>
-    <string name="start_service">START SERVICE</string>
-    <string name="hello_first_fragment">HELLO FROM FIRST FRAGMENT.</string>
-    <string name="hello_second_fragment">HELLO FROM SECOND FRAGMENT.</string>
+    <string name="send_action">发送</string>
+    <string name="send_message">通过 shouheng2015@gmail.com 给我发送邮件</string>
 
-    <string name="hello_from_service">HELLO FROM SAMPLE SERVICE.</string>
+    <string name="menu_main_feedback">反馈</string>
+
+    <string name="second_say_hello">打招呼</string>
+    <string name="second_start_service">启动 Service</string>
+    <string name="second_hello_content">来自 Second fragment 的问候</string>
+    <string name="second_hello_from_service">来自 Service 的问候</string>
+    <string name="second_show_edit_dialog">显示列表对话框</string>
+    <string name="second_sample_list_title">列表对话框</string>
+    <string name="second_sample_list_content_1">秦时明月汉时关，万里长征人未还。\n但使龙城飞将在，不教胡马度阴山。</string>
+    <string name="second_sample_list_content_2">春眠不觉晓，处处闻啼鸟。\n夜来风雨声，花落知多少。</string>
+    <string name="second_sample_list_content_3">君自故乡来，应知故乡事。\n来日绮窗前，寒梅著花未？</string>
+    <string name="second_sample_list_content_4">松下问童子，言师采药去。\n只在此山中，云深不知处。</string>
 </resources>
